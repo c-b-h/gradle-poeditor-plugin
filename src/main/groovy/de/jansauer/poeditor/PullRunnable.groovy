@@ -7,6 +7,7 @@ import org.gradle.api.GradleException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+import javax.annotation.Nullable
 import javax.inject.Inject
 
 import static groovyx.net.http.HttpBuilder.configure
@@ -18,17 +19,26 @@ class PullRunnable implements Runnable {
   private final String lang
   private final String type
   private final File file
+  @Nullable
+  private final String alternativeProjectId
   private final List<String> tags
 
   private final Logger logger = LoggerFactory.getLogger(PullRunnable.class)
 
   @Inject
-  PullRunnable(String apiKey, String projectId, String lang, String type, File file, List<String> tags) {
+  PullRunnable(String apiKey,
+               String projectId,
+               String lang,
+               String type,
+               File file,
+               @Nullable String alternativeProjectId,
+               List<String> tags) {
     this.apiKey = apiKey
     this.projectId = projectId
     this.lang = lang
     this.type = type
     this.file = file
+    this.alternativeProjectId = alternativeProjectId
     this.tags = tags
   }
 
@@ -42,7 +52,7 @@ class PullRunnable implements Runnable {
       request.contentType = 'multipart/form-data'
       request.body = multipart {
         field 'api_token', apiKey
-        field 'id', projectId
+        field 'id', alternativeProjectId ?: projectId
         field 'language', lang
         field 'type', type
 
