@@ -20,7 +20,7 @@ class PullRunnable implements Runnable {
   private final String type
   private final File file
   @Nullable
-  private final String alternativeProjectId
+  private final String optionalProjectId
   private final List<String> tags
 
   private final Logger logger = LoggerFactory.getLogger(PullRunnable.class)
@@ -31,14 +31,14 @@ class PullRunnable implements Runnable {
                String lang,
                String type,
                File file,
-               @Nullable String alternativeProjectId,
+               @Nullable String optionalProjectId,
                List<String> tags) {
     this.apiKey = apiKey
     this.projectId = projectId
     this.lang = lang
     this.type = type
     this.file = file
-    this.alternativeProjectId = alternativeProjectId
+    this.optionalProjectId = optionalProjectId
     this.tags = tags
   }
 
@@ -52,7 +52,7 @@ class PullRunnable implements Runnable {
       request.contentType = 'multipart/form-data'
       request.body = multipart {
         field 'api_token', apiKey
-        field 'id', alternativeProjectId ?: projectId
+        field 'id', optionalProjectId ?: projectId
         field 'language', lang
         field 'type', type
 
